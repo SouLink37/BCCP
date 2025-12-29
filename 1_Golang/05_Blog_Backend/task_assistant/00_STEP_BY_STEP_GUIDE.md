@@ -9,10 +9,10 @@
 - [x] 第1步：依赖安装完成（go.mod 中有所有依赖，使用 MySQL 驱动）
 - [x] 第2步：目录结构创建完成（包括 .env 文件）
 - [x] 第3步：config/config.go 和 .env 创建完成
-- [x] 第4步：最小 main.go ��建并测试成功
+- [x] 第4步：最小 main.go 建并测试成功
 - [x] 第5步：models/ 下三个模型文件创建完成
 - [x] 第6步：MySQL 数据库创建完成，database/db.go 创建完成并测试连接
-- [ ] 第7步：utils/ 下三个工具文件创建完成
+- [x] 第7步：utils/ 下三个工具文件创建完成
 - [ ] 第8步：middleware/auth.go 创建完成
 - [ ] 第9步：handlers/auth.go 创建完成
 - [ ] 第10步：handlers/post.go 创建完成
