@@ -12,12 +12,13 @@ var jwtSecret = []byte("blog-backend-secret-key-dev")
 
 // Claims represents the claims for the JWT token.
 type Claims struct {
-	UserID uint
+	UserID   uint
+	Username string
 	jwt.RegisteredClaims
 }
 
 // GenerateToken generates a JWT token for the given user ID and expity hours.
-func GenerateToken(userID uint, expityHours ...int) (string, error) {
+func GenerateToken(userID uint, username string, expityHours ...int) (string, error) {
 	hours := 24
 	if len(expityHours) == 1 {
 		log.Printf("Using expity hours: %d", expityHours[0])
@@ -29,7 +30,8 @@ func GenerateToken(userID uint, expityHours ...int) (string, error) {
 
 	log.Printf("Generating JWT token for user ID: %d", userID)
 	claim := Claims{
-		UserID: userID,
+		UserID:   userID,
+		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(hours) * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

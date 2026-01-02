@@ -1,5 +1,11 @@
 package models
 
+import (
+	"blog-backend/utils"
+
+	"gorm.io/gorm"
+)
+
 type User struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	Username  string    `gorm:"type:varchar(255);uniqueIndex;not null" json:"username"`
@@ -8,4 +14,15 @@ type User struct {
 	PostCount int       `json:"post_count"`
 	Posts     []Post    `gorm:"foreignKey:UserID" json:"-"`
 	Comments  []Comment `gorm:"foreignKey:CommenterID" json:"-"`
+}
+
+func (u *User) BeforeCreate(tx *gorm.DB) error {
+	hashedPassword, err := utils.HashPassword(u.Password)
+
+	if err != nil {
+		return err
+	}
+
+	u.Password = hashedPassword
+	return nil
 }
