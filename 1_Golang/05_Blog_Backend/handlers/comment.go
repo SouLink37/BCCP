@@ -19,7 +19,7 @@ type CreateCommentRequest struct {
 }
 
 func (h *CommentHandler) CreateComment(c *gin.Context) {
-	userID, exists := c.Get("UserID")
+	userID, exists := c.Get("userID")
 	if !exists {
 		utils.Error(c, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -72,7 +72,7 @@ func (h *CommentHandler) GetComments(c *gin.Context) {
 	}
 
 	var comments []models.Comment
-	if err := h.DB.Where("post_id = ?", postID).Preload("User").Find(&comments).Error; err != nil {
+	if err := h.DB.Where("post_id = ?", postID).Preload("Commenter").Find(&comments).Error; err != nil {
 		utils.Error(c, http.StatusInternalServerError, "Failed to fetch comments")
 		return
 	}

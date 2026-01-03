@@ -901,21 +901,56 @@ func main() {
 
 ## ✅ 完成后的测试步骤
 
+### 环境准备
+
+1. 确保 MySQL 服务已启动
+2. 创建 `.env` 文件，配置如下：
+   ```
+   DB_USER=root
+   DB_PASSWORD=
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_NAME=blog_backend
+   SERVER_PORT=:8080
+   ```
+3. 运行应用：`go run main.go`
+4. 应用将在 `http://localhost:8080` 运行
+
 ### 使用网页版 Postman 测试
 
 打开 https://web.postman.co/，逐个测试以下接口：
 
-| 功能 | 请求方式 | URL | 说明 |
-|------|---------|-----|------|
-| **注册** | POST | `http://localhost:8080/api/auth/register` | Body: `{"username":"user1","email":"user@example.com","password":"123456"}` |
-| **登录** | POST | `http://localhost:8080/api/auth/login` | Body: `{"username":"user1","password":"123456"}` |
-| **获取所有文章** | GET | `http://localhost:8080/api/posts` | 无需认证 |
-| **创建文章** | POST | `http://localhost:8080/api/posts` | Header: `Authorization: Bearer [token]` |
-| **获取单篇文章** | GET | `http://localhost:8080/api/posts/1` | 无需认证 |
-| **更新文章** | PUT | `http://localhost:8080/api/posts/1` | Header: `Authorization: Bearer [token]` |
-| **删除文章** | DELETE | `http://localhost:8080/api/posts/1` | Header: `Authorization: Bearer [token]` |
-| **创建评论** | POST | `http://localhost:8080/api/posts/1/comments` | Header: `Authorization: Bearer [token]` |
-| **获取评论** | GET | `http://localhost:8080/api/posts/1/comments` | 无需认证 |
+| 序号 | 功能 | 请求方式 | URL | 请求体/Headers | 预期结果 |
+|------|------|---------|-----|-----------------|---------|
+| 1 | **注册用户** | POST | `http://localhost:8080/api/auth/register` | Body: `{"username":"user1","email":"user@example.com","password":"12345678"}` | 返回 `{"code":200,"message":"User registered successfully"}` |
+| 2 | **登录用户** | POST | `http://localhost:8080/api/auth/login` | Body: `{"username":"user1","password":"12345678"}` | 返回 `{"code":200,"data":{"token":"jwt_token_here"},"message":"Login successful"}` 并**保存 token** |
+| 3 | **获取所有文章** | GET | `http://localhost:8080/api/posts` | 无需认证 | 返回所有文章列表（初始时为空数组）|
+| 4 | **创建文章** | POST | `http://localhost:8080/api/posts` | Header: `Authorization: Bearer [刚才保存的token]` <br> Body: `{"title":"My First Post","content":"This is the content of my first post"}` | 返回 `{"code":200,"data":{"id":1,...},"message":"Post created successfully"}` |
+| 5 | **获取单篇文章** | GET | `http://localhost:8080/api/posts/1` | 无需认证 | 返回 ID 为 1 的文章详情，包括评论数据 |
+| 6 | **创建评论** | POST | `http://localhost:8080/api/posts/1/comments` | Header: `Authorization: Bearer [token]` <br> Body: `{"content":"Great post!"}` | 返回 `{"code":200,"data":{"id":1,...},"message":"Comment created successfully"}` |
+| 7 | **获取评论列表** | GET | `http://localhost:8080/api/posts/1/comments` | 无需认证 | 返回该文章的所有评论列表 |
+| 8 | **更新文章** | PUT | `http://localhost:8080/api/posts/1` | Header: `Authorization: Bearer [token]` <br> Body: `{"title":"Updated Title","content":"Updated content"}` | 返回 `{"code":200,"data":{...},"message":"Post updated successfully"}` |
+| 9 | **删除文章** | DELETE | `http://localhost:8080/api/posts/1` | Header: `Authorization: Bearer [token]` | 返回 `{"code":200,"message":"Post deleted successfully"}` |
+
+### 测试检查清单
+
+- [ ] 注册用户时，密码会被正确加密存储
+- [ ] 登录后获取的 token 是有效的 JWT
+- [ ] 使用 token 能够访问需要认证的接口
+- [ ] 使用错误的 token 或无 token 访问受保护接口时返回 401
+- [ ] 创建文章时自动关联当前登录的用户
+- [ ] 更新和删除文章时验证操作者是否为文章所有者
+- [ ] 获取文章详情时包含该文章的评论数据
+- [ ] 创建评论时自动关联当前登录的用户和指定的文章
+
+### 常见问题排查
+
+| 问题 | 解决方案 |
+|------|---------|
+| `address 3306: missing port in address` | 检查 `.env` 文件中 `SERVER_PORT` 是否设置为 `:8080` 格式 |
+| 无法连接数据库 | 确保 MySQL 运行中，DB_HOST/DB_PORT/DB_NAME 配置正确 |
+| 401 Unauthorized 错误 | 检查 Authorization header 格式是否为 `Bearer [token]`，确保 token 未过期 |
+| 更新/删除文章返回 403 | 确保只用创建该文章的用户的 token 进行操作 |
 
 ---
 

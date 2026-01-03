@@ -11,17 +11,17 @@ import (
 )
 
 type PostHandler struct {
-	DB gorm.DB
+	DB *gorm.DB
 }
 
 type CreatePostRequest struct {
-	Title   string `json:"title" binding:"required, min=1, max=200"`
-	Content string `json:"content" bingding:"required, min=1"`
+	Title   string `json:"title" binding:"required,min=1,max=200"`
+	Content string `json:"content" bingding:"required,min=1"`
 }
 
 type UpdatePostRequest struct {
-	Title   string `json:"title" binding:"required, min=1, max=200"`
-	Content string `json:"content" bingding:"required, min=1"`
+	Title   string `json:"title" binding:"required,min=1,max=200"`
+	Content string `json:"content" bingding:"required,min=1"`
 }
 
 // CreatePost handler for creating a new post
@@ -32,7 +32,7 @@ func (h *PostHandler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	userID, exists := c.Get("UserID")
+	userID, exists := c.Get("userID")
 	if !exists {
 		utils.Error(c, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -73,7 +73,7 @@ func (h *PostHandler) GetPost(c *gin.Context) {
 	}
 
 	var post models.Post
-	if err := h.DB.Joins("User").First(&post, postID).Error; err != nil {
+	if err := h.DB.Joins("User").Preload("Comments").First(&post, postID).Error; err != nil {
 		utils.Error(c, http.StatusNotFound, "Post not found")
 		return
 	}
@@ -84,7 +84,7 @@ func (h *PostHandler) GetPost(c *gin.Context) {
 // UpdatePost handler for updating a post
 func (h *PostHandler) UpdatePost(c *gin.Context) {
 	// 1. check if user is authenticated
-	userID, exists := c.Get("UserID")
+	userID, exists := c.Get("userID")
 	if !exists {
 		utils.Error(c, http.StatusUnauthorized, "User not authenticated")
 		return
@@ -96,9 +96,10 @@ func (h *PostHandler) UpdatePost(c *gin.Context) {
 		utils.Error(c, http.StatusBadRequest, "Invalid post ID")
 		return
 	}
-	var post models.Post
 
 	// 3. check if post exists
+	var post models.Post
+
 	if err := h.DB.First(&post, postID).Error; err != nil {
 		utils.Error(c, http.StatusNotFound, "Post not found")
 		return
@@ -118,13 +119,11 @@ func (h *PostHandler) UpdatePost(c *gin.Context) {
 	}
 
 	// 6. update post
-	post = models.Post{
-		Title:   req.Title,
-		Content: req.Content,
-	}
+	post.Title = req.Title
+	post.Content = req.Content
 
 	// 7. save post to database
-	if err := h.DB.Create(&post).Error; err != nil {
+	if err := h.DB.Save(&post).Error; err != nil {
 		utils.Error(c, http.StatusInternalServerError, "Failed to update post")
 		return
 	}
@@ -136,7 +135,7 @@ func (h *PostHandler) UpdatePost(c *gin.Context) {
 
 // DeletePost handler for deleting a post
 func (h *PostHandler) DeletePost(c *gin.Context) {
-	userID, exists := c.Get("UserID")
+	userID, exists := c.Get("userID")
 
 	if !exists {
 		utils.Error(c, http.StatusUnauthorized, "User not authenticated")

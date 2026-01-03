@@ -10,8 +10,8 @@ import (
 // HashPassword hashes the password using bcrypt.
 func HashPassword(password string) (string, error) {
 	if len(password) < 8 {
-		log.Printf("Password too short: minimum 6 characters.")
-		return "", errors.New("Password too short: minimum 6 characters.")
+		log.Printf("Password too short: minimum 8 characters.")
+		return "", errors.New("Password too short: minimum 8 characters.")
 	} else if len(password) > 72 {
 		log.Printf("Password too long: maximum 72 characters.")
 		return "", errors.New("Password too long: maximum 72 characters.")

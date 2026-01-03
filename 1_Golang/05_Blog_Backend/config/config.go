@@ -14,6 +14,7 @@ type Config struct {
 	DBHost     string
 	DBPort     string
 	DBName     string
+	ServerPort string
 }
 
 // GetDSN returns the DSN for the database.
@@ -42,12 +43,14 @@ func LoadConfig() *Config {
 		DBHost:     os.Getenv("DB_HOST"),
 		DBPort:     os.Getenv("DB_PORT"),
 		DBName:     os.Getenv("DB_NAME"),
+		ServerPort: os.Getenv("SERVER_PORT"),
 	}
 
-	log.Printf("Config load successfully:\nDBHost: %s\nDBPort: %s\nDBName: %s\n",
+	log.Printf("Config load successfully:\nDBHost: %s\nDBPort: %s\nDBName: %s\nServerPort: %s\n",
 		config.DBHost,
 		config.DBPort,
-		config.DBName)
+		config.DBName,
+		config.ServerPort)
 
 	return config
 }

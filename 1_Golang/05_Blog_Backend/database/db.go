@@ -10,13 +10,14 @@ import (
 )
 
 // InitDB initializes the database and performs auto-migration.
-func InitDB(cfg *config.Config) {
+func InitDB(cfg *config.Config) *gorm.DB {
 	dsn := cfg.GetDSN()
 	db := connectDB(dsn)
 
 	db.AutoMigrate(&models.User{}, &models.Post{}, &models.Comment{})
 
 	log.Println("Database initialized.")
+	return db
 }
 
 // connectDB connects to the database and returns the database connection.
