@@ -18,7 +18,7 @@ contract BinarySearch {
             uint256 mid = left + (right - left) / 2;
             
             if (inputArray[mid] == target) {
-                return mid;
+                return int(mid);
             } else if (inputArray[mid] < target) {
                 left = mid + 1;
             } else {
