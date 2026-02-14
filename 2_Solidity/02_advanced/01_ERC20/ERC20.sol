@@ -65,7 +65,7 @@ contract ERC20 is IERC20 {
         require(balanceOf[from] >= value, "Insufficient balance");
         require(allowance[from][msg.sender] >= value, "Insufficient allowance");
 
-        balanceOf[from] -= value
+        balanceOf[from] -= value;
         balanceOf[to] += value;
         allowance[from][msg.sender] -= value;
 
