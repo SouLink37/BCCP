@@ -40,3 +40,10 @@
 1. 捐赠事件：添加 Donation 事件，记录每次捐赠的地址和金额。
 2. 捐赠排行榜：实现一个功能，显示捐赠金额最多的前 3 个地址。
 3. 时间限制：添加一个时间限制，只有在特定时间段内才能捐赠。
+
+合约地址(sepolia)： 0xbdc5d7f253344f490fb628611e3f34d5e39c5a6b977b1d6764d6df183fb6db9c
+
+donate: 0xbae2a3d2b5ec06ee606a54bd6107e7bdb1cbd8b1bbc1669c9335013f963a16df
+
+withdraw:
+0x30e38656fd14d4e6a797153ea235fba22141e38458ee2529a204a0ee9491c13d
