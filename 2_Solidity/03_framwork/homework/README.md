@@ -7,32 +7,32 @@
 
 任务步骤
 1. 项目初始化
-1. 使用 Foundry 初始化项目：
+1.1 使用 Foundry 初始化项目：
 `forge init`
-2. 安装必要的依赖：
+1.2 安装必要的依赖：
      `forge install OpenZeppelin/openzeppelin-contracts`
      `forge install smartcontractkit/chainlink-brownie-contracts`
 2. 实现 NFT 拍卖市场
-1. NFT 合约：
+2.1 NFT 合约：
   - 使用 `ERC721` 标准实现一个 NFT 合约。
   - 支持 NFT 的铸造和转移。
-2. 拍卖合约：
+2.2 拍卖合约：
   - 实现一个拍卖合约，支持以下功能：
   - 创建拍卖：允许用户将 NFT 上架拍卖。
   - 出价：允许用户以 ERC20 或以太坊出价。
   - 结束拍卖：拍卖结束后，NFT 转移给出价最高者，资金转移给卖家。
-3. 集成 Chainlink 预言机
-4. 价格计算：
+2.3 集成 Chainlink 预言机
+2.4 价格计算：
   - 使用 Chainlink 的 feedData 预言机，获取 ERC20 和以太坊到美元的价格。
   - 在拍卖合约中，将出价金额转换为美元，方便用户比较。
-5. 合约升级
-  1. UUPS/透明代理：
+2.5 合约升级
+  2.5.1 UUPS/透明代理：
   - 使用 UUPS 或透明代理模式实现合约升级。
-6. 测试与部署
-  1. 测试：
+2.6 测试与部署
+  2.6.1 测试：
   - 使用 Foundry 测试框架编写单元测试和集成测试，覆盖所有功能。
   - 运行测试：`forge test`
-  2. 部署：
+  2.6.2 部署：
   - 使用 Foundry 部署脚本，将合约部署到测试网（如 Sepolia）。
   - 部署命令：`forge script script/Deploy.s.sol --rpc-url $RPC_URL --broadcast`
 
